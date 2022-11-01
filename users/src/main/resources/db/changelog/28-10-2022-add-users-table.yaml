@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1563227779779-1
+      author: Daniil.Dimitrov
+      failOnError: true
+      comment: "Created hibernate_sequence, needed by envers audit"
+      changes:
+        - createSequence:
+            sequenceName: hibernate_sequence_user
+            incrementBy: 1
+            cycle: false
+            cacheSize: 1
+            minValue: 1
+            startValue: 1
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uuid
+                  type: UUID
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(70)
+              - column:
+                  name: id_role
+                  type: varchar(50)
+              - column:
+                  name: created
+                  type: datetime
+              - column:
+                  name: modified
+                  type: datetime
