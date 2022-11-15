@@ -42,10 +42,10 @@ public class UserServiceTest {
     @DisplayName("Проверка создания пользователя")
     public void createUserTest() {
 
-        User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user1 = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user1);
 
-        User user2 = userServiceImpl.createUser(new CreateUserRequest("Alex", "qwerty", Role.Intern));
+        User user2 = userServiceImpl.createUser(new CreateUserRequest("Alex1", "qwerty"));
         assertThat(user1).isEqualTo(user2);
     }
 
@@ -53,13 +53,13 @@ public class UserServiceTest {
     @DisplayName("Проверка обновления пользователя")
     public void updateUserTest() {
 
-        User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
-        User user2 = new User("Dan", bCryptPasswordEncoder.encode("password"), Role.Mentor);
+        User user1 = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user2 = new User("Dan55", bCryptPasswordEncoder.encode("password"), Role.Mentor);
 
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user2);
         Mockito.when(userRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(user1));
 
-        userServiceImpl.updateUser(new UpdateUserRequest("Dan", "password", Role.Mentor), user1.getUuid());
+        userServiceImpl.updateUser(new UpdateUserRequest("Dan55", "password", Role.Mentor), user1.getUuid());
         assertThat(Optional.of(user1.getUsername())).isEqualTo(Optional.of(user2.getUsername()));
         assertThat(Optional.of(user1.getIdRole())).isEqualTo(Optional.of(user2.getIdRole()));
         assertThat(Optional.of(bCryptPasswordEncoder.matches("qwerty", user1.getPassword())))
@@ -70,7 +70,7 @@ public class UserServiceTest {
     @DisplayName("Проверка удаления пользователя")
     public void deleteUserTest() {
 
-        User user = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
 
         Mockito.when(userRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(user));
         userServiceImpl.deleteUserByUUID(user.getUuid());
@@ -83,7 +83,7 @@ public class UserServiceTest {
     @DisplayName("Проверка получения пользователя")
     public void findByUUIDTest() {
 
-        User user = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
         Mockito.when(userRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(user));
 
         User userFound = userServiceImpl.findByUuid(user.getUuid()).orElseThrow();
@@ -95,8 +95,8 @@ public class UserServiceTest {
     @DisplayName("Проверка получения всех пользователей")
     public void findAllTest() {
 
-        User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
-        User user2 = new User("Dan", bCryptPasswordEncoder.encode("password"), Role.Mentor);
+        User user1 = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user2 = new User("Dan55", bCryptPasswordEncoder.encode("password"), Role.Mentor);
 
         Mockito.when(userServiceImpl.findAll()).thenReturn(List.of(user1, user2));
         Iterable<User> users = userServiceImpl.findAll();
@@ -107,12 +107,12 @@ public class UserServiceTest {
     @DisplayName("Проверка создания уже существующего пользователя")
     public void createUserTestException() {
 
-        User user = new User("Tom", bCryptPasswordEncoder.encode("password"), Role.Intern);
+        User user = new User("Tom55", bCryptPasswordEncoder.encode("password"), Role.Intern);
 
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
         Mockito.when(userRepository.save(Mockito.any())).thenThrow(SuchException.class);
         Throwable throwable = catchThrowable(() -> userServiceImpl
-                .createUser(new CreateUserRequest("Tom", "password", Role.Intern)));
+                .createUser(new CreateUserRequest("Tom55", "password")));
         assertThat(throwable).isInstanceOf(SuchException.class);
     }
 
@@ -122,7 +122,7 @@ public class UserServiceTest {
 
         Mockito.when(userServiceImpl.findByUuid(Mockito.any())).thenThrow(UserException.class);
         Throwable throwable = catchThrowable(() -> userServiceImpl
-                .updateUser(new UpdateUserRequest("Alex", "qwerty", Role.Mentor), UUID.randomUUID()));
+                .updateUser(new UpdateUserRequest("Alex1", "qwerty", Role.Mentor), UUID.randomUUID()));
         assertThat(throwable).isInstanceOf(UserException.class);
     }
 

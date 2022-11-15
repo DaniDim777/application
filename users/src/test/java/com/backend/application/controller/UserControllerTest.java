@@ -53,7 +53,7 @@ public class UserControllerTest {
     @DisplayName("Проверка создания пользователя")
     public void createUserTest() {
 
-        User user = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
 
         Mockito.when(userServiceImpl.createUser(Mockito.any())).thenReturn(user);
 
@@ -62,7 +62,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.username").value("Alex"))
+                .andExpect(jsonPath("$.username").value("Alex1"))
                 .andExpect(jsonPath("$.id").value(0))
                 .andExpect(jsonPath("$.idRole").value(Role.Intern.name()));
     }
@@ -73,18 +73,17 @@ public class UserControllerTest {
     @DisplayName("Проверка обновления пользователя")
     public void updateUserTest() {
 
-        User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
-        User user2 = new User("John", bCryptPasswordEncoder.encode("newpass"), Role.Admin);
+        User user1 = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Mentor);
+        User user2 = new User("John9", bCryptPasswordEncoder.encode("newpass"), Role.Admin);
 
         Mockito.when(userServiceImpl.findByUuid(Mockito.any())).thenReturn(Optional.of(user1));
         Mockito.when(userServiceImpl.updateUser(Mockito.any(), Mockito.any())).thenReturn(Optional.of(user2));
 
         mockMvc.perform(put("/users/" + user1.getUuid())
-                .content(objectMapper.writeValueAsString(new UpdateUserRequest("John", "newpass", Role.Admin)))
+                .content(objectMapper.writeValueAsString(new UpdateUserRequest("John9", "newpass", Role.Admin)))
                 .contentType(MediaType.APPLICATION_JSON))
-
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("John"))
+                .andExpect(jsonPath("$.username").value("John9"))
                 .andExpect(jsonPath("$.idRole").value(Role.Admin.name()));
     }
 
@@ -93,7 +92,7 @@ public class UserControllerTest {
     @DisplayName("Проверка удаления пользователя")
     public void deleteUserTest() {
 
-        User user = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
 
         Mockito.when(userServiceImpl.findByUuid(Mockito.any())).thenReturn(Optional.of(user));
 
@@ -106,7 +105,7 @@ public class UserControllerTest {
     @DisplayName("Провера получения пользователя")
     public void getUserTest() {
 
-        User user = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
+        User user = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
 
         Mockito.when(userServiceImpl.findByUuid(Mockito.any())).thenReturn(Optional.of(user));
 
@@ -115,7 +114,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("Alex"))
+                .andExpect(jsonPath("$.username").value("Alex1"))
                 .andExpect(jsonPath("$.idRole").value(Role.Intern.name()));
     }
 
@@ -124,8 +123,8 @@ public class UserControllerTest {
     @DisplayName("Проверка получения всех пользователей")
     public void getAllUsersTest() {
 
-        User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Mentor);
-        User user2 = new User("Tom", bCryptPasswordEncoder.encode("password"), Role.Supervisor);
+        User user1 = new User("Alex1", bCryptPasswordEncoder.encode("qwerty"), Role.Mentor);
+        User user2 = new User("Tom55", bCryptPasswordEncoder.encode("password"), Role.Supervisor);
 
         Mockito.when(userServiceImpl.findAll()).thenReturn(List.of(user1, user2));
 
@@ -143,8 +142,8 @@ public class UserControllerTest {
     @DisplayName("Проверка создания уже существующего пользователя")
     public void createUserTestException() {
 
-        User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwe"), Role.Intern);
-        User user2 = new User("Alex", bCryptPasswordEncoder.encode("qwe"), Role.Intern);
+        User user1 = new User("Alex1", bCryptPasswordEncoder.encode("qwe"), Role.Intern);
+        User user2 = new User("Alex1", bCryptPasswordEncoder.encode("qwe"), Role.Intern);
 
         Mockito.when(userServiceImpl.createUser(Mockito.any())).thenReturn(user1);
         Mockito.when(userServiceImpl.createUser(Mockito.any())).thenThrow(SuchException.class);
@@ -165,7 +164,7 @@ public class UserControllerTest {
         Mockito.when(userServiceImpl.findByUuid(Mockito.any())).thenReturn(Optional.empty());
 
         mockMvc.perform(put("/users/" + UUID.randomUUID())
-                .content(objectMapper.writeValueAsString(new UpdateUserRequest("Alex", "qwerty", Role.Intern)))
+                .content(objectMapper.writeValueAsString(new UpdateUserRequest("Alex1", "qwerty", Role.Intern)))
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNotFound())

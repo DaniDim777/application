@@ -1,6 +1,5 @@
 package com.backend.application.dto.requests;
 
-import com.backend.application.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,13 +10,13 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserRequest {
+public class SignRequest {
 
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank
     @Size(min = 5, max = 32)
-    private String username;
+    String username;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 5, max = 62)
-    private String password;
+    @NotBlank
+    @Size(min = 5, max = 32)
+    String password;
 }

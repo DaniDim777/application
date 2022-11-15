@@ -22,6 +22,7 @@
     <modules>
         <module>app</module>
         <module>users</module>
+        <module>auth</module>
     </modules>
 
     <build>
