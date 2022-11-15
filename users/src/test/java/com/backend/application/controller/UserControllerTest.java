@@ -164,7 +164,7 @@ public class UserControllerTest {
         Mockito.when(userServiceImpl.findByUuid(Mockito.any())).thenReturn(Optional.empty());
 
         mockMvc.perform(put("/users/" + UUID.randomUUID())
-                .content(objectMapper.writeValueAsString(new UpdateUserRequest("Alex9", "qwerty", Role.Intern)))
+                .content(objectMapper.writeValueAsString(new UpdateUserRequest("Alex1", "qwerty", Role.Intern)))
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isNotFound())
