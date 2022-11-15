@@ -10,6 +10,7 @@ import com.backend.application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR', 'MENTOR')")
     @GetMapping("/{uuid}")
     @ResponseStatus(code = HttpStatus.OK)
     public UserDto getUser(@PathVariable("uuid") final UUID uuid) {
@@ -43,12 +45,14 @@ public class UserController {
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND_MESSAGE)));
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR', 'MENTOR')")
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public Iterable<UserDto> getAllUsers() {
         return userMapper.CONVERT_IT_TO_DTO(userService.findAll());
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
     @PutMapping("/{uuid}")
     @ResponseStatus(code = HttpStatus.OK)
     public UserDto updateUser(@Valid @RequestBody final UpdateUserRequest request,
@@ -57,6 +61,7 @@ public class UserController {
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND_MESSAGE)));
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
     @DeleteMapping("/{uuid}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable("uuid") final UUID uuid) {

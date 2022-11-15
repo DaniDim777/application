@@ -1,5 +1,6 @@
 package com.backend.application.service;
 
+import com.backend.application.domain.Role;
 import com.backend.application.domain.User;
 import com.backend.application.dto.requests.CreateUserRequest;
 import com.backend.application.dto.requests.UpdateUserRequest;
@@ -24,8 +25,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(CreateUserRequest request) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        Optional<User> optionalUser = userRepository.findByIdRole(Role.Admin);
+        if (optionalUser.isEmpty()) {
+            User user = new User();
+            user.setUuid(UUID.randomUUID());
+            user.setUsername(request.getUsername());
+            user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+            user.setIdRole(Role.Admin);
+            return userRepository.save(user);
+        }
         return userRepository.save(new User(request.getUsername(),
-                bCryptPasswordEncoder.encode(request.getPassword()), request.getIdRole()));
+                bCryptPasswordEncoder.encode(request.getPassword()), Role.Intern));
     }
 
     @Transactional
@@ -58,5 +68,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Iterable<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.ofNullable(userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND_MESSAGE)));
+    }
+
+    @Override
+    public Optional<User> findByRole(Role idRole) {
+        return userRepository.findByIdRole(idRole);
     }
 }

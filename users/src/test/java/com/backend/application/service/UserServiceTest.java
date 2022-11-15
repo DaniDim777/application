@@ -45,7 +45,7 @@ public class UserServiceTest {
         User user1 = new User("Alex", bCryptPasswordEncoder.encode("qwerty"), Role.Intern);
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user1);
 
-        User user2 = userServiceImpl.createUser(new CreateUserRequest("Alex", "qwerty", Role.Intern));
+        User user2 = userServiceImpl.createUser(new CreateUserRequest("Alex", "qwerty"));
         assertThat(user1).isEqualTo(user2);
     }
 
@@ -112,7 +112,7 @@ public class UserServiceTest {
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
         Mockito.when(userRepository.save(Mockito.any())).thenThrow(SuchException.class);
         Throwable throwable = catchThrowable(() -> userServiceImpl
-                .createUser(new CreateUserRequest("Tom", "password", Role.Intern)));
+                .createUser(new CreateUserRequest("Tom", "password")));
         assertThat(throwable).isInstanceOf(SuchException.class);
     }
 
